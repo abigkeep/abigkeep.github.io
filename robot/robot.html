@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+    <title>AI聊天</title>
+    <style>
+        .main {
+            background: url(./img/loveBg.jpg) no-repeat;
+            background-size: 100% 100%;
+        }
+        body {
+	background: url(./img/index1.png) no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+	}
+
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <!-- 头部 Header 区域 -->
+        <div class="header">
+            <h3>小曦</h3>
+            
+        </div>
+        <!-- 中间 聊天内容区域 -->
+        <div class="main">
+            <ul class="talk_list" style="top: 0px;" id="talk_list">
+                <li class="left_word">
+                    <img src="img/friend02.jpg" /> <span>又看到你，好开心哟~</span>
+                </li>
+                <!-- <li class="right_word">
+            <img src="img/person02.png" /> <span>你好哦</span>
+          </li> -->
+            </ul>
+            <div class="drag_bar" style="display: none;">
+                <div class="drager ui-draggable ui-draggable-handle" style="display: none; height: 412.628px;"></div>
+            </div>
+        </div>
+        <!-- 底部 消息编辑区域 -->
+        <div class="footer">
+            <img src="img/my01.jpg" alt="icon" />
+            <input type="text" placeholder="说点什么吧..." class="input_txt" id="ipt" />
+            <input type="button" value="发 送" class="input_sub" id="btnSend" />
+        </div>
+    </div>
+    <!-- 注意：只要为 audio 指定了新的 src 属性，而且指定了 autoplay，那么，语音就会自动播放 -->
+    <script type="text/javascript" src="js/scroll.js"></script>
+</body>
+
+</html>
+
+<script>
+    $("#btnSend").on("click", function() {
+        let value = $("#ipt").val().trim();
+        if (value == "") return;
+        $("#ipt").val("");
+        let my = `<li class='right_word'><img src="img/my01.jpg" /> <span>${value}</span></li>`;
+        $("#talk_list").append(my);
+        resetui();
+        txt(value);
+
+    })
+
+    function txt(value) {
+        $.get({
+            url: "http://www.liulongbin.top:3006/api/robot",
+            data: {
+                spoken: value
+            },
+            success: function(backData) {
+                console.log(backData)
+                let res = `<li class="left_word">
+                <img src="img/friend02.jpg" /><span>${backData.data.info.text}</span></li>`;
+
+                $("#talk_list").append(res)
+                resetui();
+                speack(backData);
+            }
+        })
+    }
+
+    function speack(backData) {
+        $.get({
+            url: "http://www.liulongbin.top:3006/api/synthesize",
+            data: {
+                text: backData.data.info.text
+            },
+            success: function(back) {
+                console.log(back);
+                $("#voice").attr("src", back.voiceUrl);
+                document.querySelector("#voice").playbackRate = 1.3;
+            }
+        })
+    }
+
+    $("#ipt").on("keydown", function(e) {
+        if (e.keyCode != 13) {
+            return;
+        }
+        $("#btnSend").click();
+    })
+</script>
