@@ -1,0 +1,26 @@
+[
+  {
+    "name": "晴天",
+    "audio_url": "./audios/晴天.mp3",
+    "singer": "周杰伦",
+    "album": "叶惠美",
+    "cover": "./img/1.webp",
+    "time": "04:30"
+  },
+  {
+    "name": "七里香",
+    "audio_url": "./audios/七里香.mp3",
+    "singer": "周杰伦",
+    "album": "七里香",
+    "cover": "./img/2.webp",
+    "time": "04:59"
+  },
+  {
+    "name": "稻香",
+    "audio_url": "./audios/稻香.mp3",
+    "singer": "周杰伦",
+    "album": "魔杰座",
+    "cover": "./img/3.webp",
+    "time": "03:44"
+  },
+ ]
